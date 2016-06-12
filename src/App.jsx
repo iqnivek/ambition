@@ -1,5 +1,6 @@
 import React from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
+import CircularProgressbar from 'react-circular-progressbar';
 import range from 'lodash.range';
 
 function shiftDate(date, numDays) {
@@ -26,9 +27,13 @@ class App extends React.Component {
   }
 
   renderWeek() {
+    const size = `${100 / 7.0}%`;
     return range(7).map((index) => {
-      const className = index === currentDay ? 'day active' : 'day';
-      return <div key={index} className={className}>{DAYS[index]}</div>
+      return (
+        <div key={index} className={index === currentDay ? 'day active' : 'day'} style={{ width: size }}>
+          <CircularProgressbar percentage={0} textForPercentage={(percentage) => DAYS[index]} />
+        </div>
+      );
     });
   }
 
@@ -41,11 +46,11 @@ class App extends React.Component {
               <h1 className="text-xs-center">Ambition</h1>
               <p className="text-xs-center">Paint everything turquoise.</p>
 
-              <div className="row">
+              <div className="row m-t-3">
                 {this.renderMonths()}
               </div>
 
-              <div>
+              <div className="m-t-3">
                 {this.renderWeek()}
               </div>
             </div>

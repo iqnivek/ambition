@@ -1,4 +1,5 @@
 @import 'calendar_heatmap';
+@import 'circular_progressbar';
 
 //
 // Bootstrap overrides
@@ -18,12 +19,18 @@ a {
 
 .day {
   display: inline-block;
-  border: 1px solid #00c5cd;
-  border-radius: 4px;
-  padding: 1em;
+  padding: 5px;
 
   &.active {
-    background: #00c5cd;
-    color: #fff;
+    background: #3e98c7;
+    border-radius: 4px;
+
+    .CircularProgressbar .CircularProgressbar-text {
+      fill: #fff;
+    }
+
+    .CircularProgressbar .CircularProgressbar-trail {
+      stroke: #fff;
+    }
   }
 }
