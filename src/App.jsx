@@ -11,11 +11,12 @@ function shiftDate(date, numDays) {
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+const today = new Date();
+const currentMonth = today.getMonth();
+const currentDay = today.getDay();
+
 class App extends React.Component {
   renderMonths() {
-    const today = new Date();
-    const currentMonth = today.getMonth();
-
     return [0, -1, -2].map((index) => (
       <div key={index} className="col-xs-4">
         <div>{MONTHS[currentMonth]}</div>
@@ -25,9 +26,10 @@ class App extends React.Component {
   }
 
   renderWeek() {
-    return range(7).map((index) => (
-      <div className="day">{DAYS[index]}</div>
-    ));
+    return range(7).map((index) => {
+      const className = index === currentDay ? 'day active' : 'day';
+      return <div key={index} className={className}>{DAYS[index]}</div>
+    });
   }
 
   render() {

@@ -21,4 +21,9 @@ a {
   border: 1px solid #00c5cd;
   border-radius: 4px;
   padding: 1em;
+
+  &.active {
+    background: #00c5cd;
+    color: #fff;
+  }
 }
