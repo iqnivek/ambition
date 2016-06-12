@@ -34,3 +34,18 @@ a {
     }
   }
 }
+
+.goals {
+  li {
+    color: #888;
+    padding: 1em;
+    margin-bottom: 2px;
+    border: 1px solid #3e98c7;
+    border-radius: 4px;
+
+    &.active {
+      color: #fff;
+      background: #3e98c7;
+    }
+  }
+}

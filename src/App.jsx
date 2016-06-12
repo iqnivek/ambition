@@ -37,6 +37,17 @@ class App extends React.Component {
     });
   }
 
+  renderGoals() {
+    return (
+      <ul className="goals list-unstyled">
+        <li className="active">wake up early</li>
+        <li className="active">go to gym</li>
+        <li>eat less junk food</li>
+        <li>practice piano</li>
+      </ul>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -52,6 +63,10 @@ class App extends React.Component {
 
               <div className="m-t-3">
                 {this.renderWeek()}
+              </div>
+
+              <div className="m-t-3">
+                {this.renderGoals()}
               </div>
             </div>
           </div>
