@@ -37,15 +37,16 @@ a {
 
 .goals {
   li {
-    color: #999;
+    color: #fff;
+    background: #3e98c7;
     padding: 1em;
     margin-bottom: 2px;
     border: 1px solid #999;
     border-radius: 4px;
 
     &.active {
-      color: #fff;
-      background: #3e98c7;
+      color: #999;
+      background: #fff;
     }
   }
 }
