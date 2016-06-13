@@ -30,7 +30,16 @@ class App extends React.Component {
       completedGoals: {
         2: true,
       },
+      isAddingGoal: false,
     };
+
+    this.onClickAddGoal = this.onClickAddGoal.bind(this);
+  }
+
+  onClickAddGoal() {
+    this.setState({
+      isAddingGoal: true,
+    });
   }
 
   onCompleteGoal(goalID, complete) {
@@ -73,13 +82,34 @@ class App extends React.Component {
                 <span className="goal-checkbox" onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}>
                   <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle-thin')}></i>
                 </span>
-                <span className="m-l-1">{goal.name}</span>
+                {goal.name}
               </li>
             );
           })
         }
+
+        {
+          this.state.isAddingGoal ? (
+            <li className="active">
+              <form className="form-inline">
+                <div className="form-group">
+                  <span className="goal-checkbox"><i className="fa fa-circle-thin"></i></span>
+                  <input type="text" className="form-control" placeholder="goal name" />
+                </div>
+              </form>
+            </li>
+          ) : null
+        }
       </ul>
     );
+  }
+
+  renderAddGoal() {
+    return !this.state.isAddingGoal ? (
+      <div className="text-xs-center">
+        <button className="btn btn-lg btn-outline-primary" onClick={this.onClickAddGoal}>Add goal</button>
+      </div>
+    ) : null;
   }
 
   render() {
@@ -102,9 +132,7 @@ class App extends React.Component {
               <div className="m-t-3">
                 {this.renderGoals()}
 
-                <div className="text-xs-center">
-                  <button className="btn btn-lg btn-outline-primary">Add goal</button>
-                </div>
+                {this.renderAddGoal()}
               </div>
             </div>
           </div>
