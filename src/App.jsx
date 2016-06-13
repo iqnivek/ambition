@@ -1,4 +1,5 @@
 import React from 'react';
+import update from 'react-addons-update';
 import classNames from 'classnames';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import CircularProgressbar from 'react-circular-progressbar';
@@ -32,6 +33,14 @@ class App extends React.Component {
     };
   }
 
+  onCompleteGoal(goalID, complete) {
+    this.setState(update(this.state, {
+      completedGoals: {
+        [goalID]: { $set: complete }
+      }
+    }));
+  }
+
   renderMonths() {
     return [0, -1, -2].map((index) => (
       <div key={index} className="col-xs-4">
@@ -61,7 +70,7 @@ class App extends React.Component {
 
             return (
               <li key={goal.id} className={complete ? null : 'active'}>
-                <span className="goal-checkbox">
+                <span className="goal-checkbox" onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}>
                   <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle')}></i>
                 </span>
                 <span className="m-l-1">{goal.name}</span>
