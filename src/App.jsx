@@ -81,8 +81,13 @@ class App extends React.Component {
   renderMonths() {
     return [0, -1, -2].map((index) => (
       <div key={index} className="col-xs-4">
-        <div>{MONTHS[currentMonth]}</div>
-        <CalendarHeatmap numDays={30} horizontal={false} showMonthLabels={false} values={[]} />
+        <p className="text-xs-center">{MONTHS[currentMonth]}</p>
+        <CalendarHeatmap
+          numDays={30}
+          horizontal={false}
+          showMonthLabels={false}
+          values={[]}
+        />
       </div>
     ));
   }

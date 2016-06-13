@@ -30,6 +30,7 @@ a {
 .day {
   display: inline-block;
   padding: 5px;
+  cursor: pointer;
 
   &.active {
     background: $highlightColor;
