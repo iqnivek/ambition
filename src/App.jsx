@@ -100,11 +100,12 @@ class App extends React.Component {
             <li className="active">
               <form>
                 <div className="form-group">
-                  <input type="text" className="form-control" placeholder="goal name" />
+                  <p className="text-xs-center">what's your goal?</p>
+                  <input type="text" className="form-control" />
                 </div>
 
                 <div className="text-xs-center">
-                  <div>Target: {7} times per week</div>
+                  <p>how many times per week?</p>
                   {_.range(7).map((index) => (
                     <span key={index} className="count-circle">
                       <i className="fa fa-circle" />

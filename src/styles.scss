@@ -1,12 +1,14 @@
 @import 'calendar_heatmap';
 @import 'circular_progressbar';
 
+$highlightColor: #3e98c7;
+
 //
 // Bootstrap overrides
 //
 
 a {
-  color: #3e98c7;
+  color: $highlightColor;
 
   &:hover {
     text-decoration: none;
@@ -22,7 +24,7 @@ a {
   padding: 5px;
 
   &.active {
-    background: #3e98c7;
+    background: $highlightColor;
     border-radius: 4px;
 
     .CircularProgressbar .CircularProgressbar-text {
@@ -38,7 +40,7 @@ a {
 .goals {
   li {
     color: #fff;
-    background: #3e98c7;
+    background: $highlightColor;
     padding: 1em;
     margin-bottom: 2px;
     border: 1px solid #999;
@@ -62,6 +64,7 @@ a {
 }
 
 .count-circle {
-  font-size: 1.4em;
+  color: $highlightColor;
+  font-size: 1.6em;
   margin-right: 5px;
 }
