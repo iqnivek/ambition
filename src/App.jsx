@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import CircularProgressbar from 'react-circular-progressbar';
 import _ from 'lodash';
@@ -55,9 +56,18 @@ class App extends React.Component {
     return (
       <ul className="goals list-unstyled">
         {
-          this.state.goals.map((goal) => (
-            <li key={goal.id} className={this.state.completedGoals[goal.id] ? null : 'active'}>{goal.name}</li>
-          ))
+          this.state.goals.map((goal) => {
+            const complete = this.state.completedGoals[goal.id];
+
+            return (
+              <li key={goal.id} className={complete ? null : 'active'}>
+                <span className="goal-checkbox">
+                  <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle')}></i>
+                </span>
+                <span className="m-l-1">{goal.name}</span>
+              </li>
+            );
+          })
         }
       </ul>
     );
