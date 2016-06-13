@@ -33,17 +33,18 @@ class App extends React.Component {
       isAddingGoal: false,
     };
 
-    this.onClickAddGoal = this.onClickAddGoal.bind(this);
-    this.onCancelAddGoal = this.onCancelAddGoal.bind(this);
+    this.onClickNewGoal = this.onClickNewGoal.bind(this);
+    this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
+    this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
   }
 
-  onClickAddGoal() {
+  onClickNewGoal() {
     this.setState({
       isAddingGoal: true,
     });
   }
 
-  onCancelAddGoal() {
+  onCancelNewGoal() {
     this.setState({
       isAddingGoal: false,
     });
@@ -112,8 +113,8 @@ class App extends React.Component {
                     </span>
                   ))}
                   <div className="m-t-2">
-                    <button className="btn btn-outline-primary">Add goal</button>
-                    <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelAddGoal}>Cancel</button>
+                    <button className="btn btn-outline-primary" onClick={this.onSubmitNewGoal}>Add goal</button>
+                    <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelNewGoal}>Cancel</button>
                   </div>
                 </div>
               </form>
@@ -127,7 +128,7 @@ class App extends React.Component {
   renderAddGoal() {
     return !this.state.isAddingGoal ? (
       <div className="text-xs-center">
-        <button className="btn btn-lg btn-outline-primary" onClick={this.onClickAddGoal}>Add goal</button>
+        <button className="btn btn-lg btn-outline-primary" onClick={this.onClickNewGoal}>Add goal</button>
       </div>
     ) : null;
   }
