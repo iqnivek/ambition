@@ -34,11 +34,18 @@ class App extends React.Component {
     };
 
     this.onClickAddGoal = this.onClickAddGoal.bind(this);
+    this.onCancelAddGoal = this.onCancelAddGoal.bind(this);
   }
 
   onClickAddGoal() {
     this.setState({
       isAddingGoal: true,
+    });
+  }
+
+  onCancelAddGoal() {
+    this.setState({
+      isAddingGoal: false,
     });
   }
 
@@ -80,7 +87,7 @@ class App extends React.Component {
             return (
               <li key={goal.id} className={complete ? null : 'active'}>
                 <span className="goal-checkbox" onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}>
-                  <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle-thin')}></i>
+                  <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle-thin')} />
                 </span>
                 {goal.name}
               </li>
@@ -91,10 +98,22 @@ class App extends React.Component {
         {
           this.state.isAddingGoal ? (
             <li className="active">
-              <form className="form-inline">
+              <form>
                 <div className="form-group">
-                  <span className="goal-checkbox"><i className="fa fa-circle-thin"></i></span>
                   <input type="text" className="form-control" placeholder="goal name" />
+                </div>
+
+                <div className="text-xs-center">
+                  <div>Target: {7} times per week</div>
+                  {_.range(7).map((index) => (
+                    <span key={index} className="count-circle">
+                      <i className="fa fa-circle" />
+                    </span>
+                  ))}
+                  <div className="m-t-2">
+                    <button className="btn btn-outline-primary">Add goal</button>
+                    <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelAddGoal}>Cancel</button>
+                  </div>
                 </div>
               </form>
             </li>
