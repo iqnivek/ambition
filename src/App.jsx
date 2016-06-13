@@ -138,7 +138,6 @@ class App extends React.Component {
           <div className="row m-y-3">
             <div className="col-xs-12 col-sm-6 offset-sm-3">
               <h1 className="text-xs-center">Ambition</h1>
-              <p className="text-xs-center">Paint it turquoise.</p>
 
               <div className="row m-t-3">
                 {this.renderMonths()}
