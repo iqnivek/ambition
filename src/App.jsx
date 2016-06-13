@@ -11,10 +11,19 @@ function shiftDate(date, numDays) {
   return newDate;
 }
 
+function lastDayOfMonth(year, month) {
+  return new Date(year, month + 1, 0);
+}
+
+function numDaysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const today = new Date();
+const currentYear = today.getYear();
 const currentMonth = today.getMonth();
 const currentDay = today.getDay();
 
@@ -79,17 +88,22 @@ class App extends React.Component {
   }
 
   renderMonths() {
-    return [0, -1, -2].map((index) => (
-      <div key={index} className="col-xs-4">
-        <p className="text-xs-center">{MONTHS[currentMonth]}</p>
-        <CalendarHeatmap
-          numDays={30}
-          horizontal={false}
-          showMonthLabels={false}
-          values={[]}
-        />
-      </div>
-    ));
+    return [-2, -1, 0].map((index) => {
+      const endDate = lastDayOfMonth(currentYear, currentMonth + index);
+      const numDays = numDaysInMonth(currentMonth, currentMonth + index);
+      return (
+        <div key={index} className="col-xs-4">
+          <p className="text-xs-center">{MONTHS[endDate.getMonth()]}</p>
+          <CalendarHeatmap
+            endDate={endDate}
+            numDays={30}
+            horizontal={false}
+            showMonthLabels={false}
+            values={[]}
+          />
+        </div>
+      );
+    });
   }
 
   renderWeek() {
