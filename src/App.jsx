@@ -30,24 +30,44 @@ class App extends React.Component {
       completedGoals: {
         2: true,
       },
-      isAddingGoal: false,
+      newGoal: null,
     };
 
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
+    this.onChangeGoalName = this.onChangeGoalName.bind(this);
   }
 
   onClickNewGoal() {
     this.setState({
-      isAddingGoal: true,
+      newGoal: {
+        id: Math.random(), // TODO
+        name: '',
+        timesPerWeek: 7,
+      }
     });
   }
 
   onCancelNewGoal() {
     this.setState({
-      isAddingGoal: false,
+      newGoal: null,
     });
+  }
+
+  onSubmitNewGoal() {
+    this.setState({
+      goals: this.state.goals.concat(this.state.newGoal),
+      newGoal: null,
+    });
+  }
+
+  onChangeGoalName(event) {
+    this.setState(update(this.state, {
+      newGoal: {
+        name: { $set: event.target.value }
+      }
+    }));
   }
 
   onCompleteGoal(goalID, complete) {
@@ -97,12 +117,18 @@ class App extends React.Component {
         }
 
         {
-          this.state.isAddingGoal ? (
+          this.state.newGoal ? (
             <li className="active">
               <form>
                 <div className="form-group">
                   <p className="text-xs-center">what's your goal?</p>
-                  <input type="text" className="form-control" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={this.state.newGoal.name}
+                    autoFocus
+                    onChange={this.onChangeGoalName}
+                  />
                 </div>
 
                 <div className="text-xs-center">
@@ -126,7 +152,7 @@ class App extends React.Component {
   }
 
   renderAddGoal() {
-    return !this.state.isAddingGoal ? (
+    return !this.state.newGoal ? (
       <div className="text-xs-center">
         <button className="btn btn-lg btn-outline-primary" onClick={this.onClickNewGoal}>Add goal</button>
       </div>
