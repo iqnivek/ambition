@@ -88,11 +88,11 @@ class App extends React.Component {
   }
 
   renderMonths() {
-    return [-2, -1, 0].map((index) => {
+    return [-3, -2, -1, 0].map((index) => {
       const endDate = lastDayOfMonth(currentYear, currentMonth + index);
       const numDays = numDaysInMonth(currentMonth, currentMonth + index);
       return (
-        <div key={index} className="col-xs-4">
+        <div key={index} className="month">
           <p className="text-xs-center">{MONTHS[endDate.getMonth()]}</p>
           <CalendarHeatmap
             endDate={endDate}
@@ -186,7 +186,7 @@ class App extends React.Component {
             <div className="col-xs-12 col-sm-6 offset-sm-3">
               <h1 className="text-xs-center">ambition</h1>
 
-              <div className="row m-t-3">
+              <div className="months">
                 {this.renderMonths()}
               </div>
 

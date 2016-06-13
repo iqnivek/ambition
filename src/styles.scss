@@ -27,6 +27,16 @@ a {
 // Custom
 //
 
+.months {
+  display: flex;
+  flex-direction: row;
+
+  .month {
+    flex: 1;
+    margin: 0 5px;
+  }
+}
+
 .day {
   display: inline-block;
   padding: 5px;
