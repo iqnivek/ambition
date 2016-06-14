@@ -111,6 +111,10 @@ class App extends React.Component {
     }));
   }
 
+  onFormSubmit(event) {
+    event.preventDefault();
+  }
+
   getCompletion(date) {
     const numCompleted = _.reduce(this.state.completedGoals[date.toISOString()], (total, isComplete) => {
       return total + (isComplete ? 1 : 0);
@@ -180,7 +184,7 @@ class App extends React.Component {
         {
           this.state.newGoal ? (
             <li className="active">
-              <form>
+              <form onSubmit={this.onFormSubmit}>
                 <div className="form-group">
                   <p className="text-xs-center">what's your goal?</p>
                   <input
