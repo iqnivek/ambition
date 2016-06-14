@@ -51,15 +51,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    const localData = localStorage.getItem('state');
+    const localState = localData ? JSON.parse(localData) : null;
+
+    this.state = localState || {
       goals: [
         { id: 1, name: 'wake up early' },
         { id: 2, name: 'go to gym' },
       ],
       completedGoals: {
-        [todayISO]: {
-          2: true,
-        }
+        [todayISO]: {}
       },
       newGoal: null,
     };
@@ -68,6 +69,10 @@ class App extends React.Component {
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem('state', JSON.stringify(this.state));
   }
 
   onClickNewGoal() {
