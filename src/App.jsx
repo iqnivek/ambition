@@ -22,9 +22,11 @@ function numDaysInMonth(year, month) {
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const today = new Date();
-const currentYear = today.getYear();
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const currentYear = today.getFullYear();
 const currentMonth = today.getMonth();
+const currentDate = today.getDate();
 const currentDay = today.getDay();
 
 class App extends React.Component {
@@ -37,7 +39,9 @@ class App extends React.Component {
         { id: 2, name: 'go to gym' },
       ],
       completedGoals: {
-        2: true,
+        [today.toISOString()]: {
+          2: true,
+        }
       },
       newGoal: null,
     };
@@ -82,9 +86,19 @@ class App extends React.Component {
   onCompleteGoal(goalID, complete) {
     this.setState(update(this.state, {
       completedGoals: {
-        [goalID]: { $set: complete }
+        [today.toISOString()]: {
+          [goalID]: { $set: complete }
+        }
       }
     }));
+  }
+
+  getCompletion(date) {
+    const numCompleted = _.reduce(this.state.completedGoals[date.toISOString()], (total, isComplete) => {
+      return total + (isComplete ? 1 : 0);
+    }, 0);
+
+    return numCompleted * 100.0 / this.state.goals.length;
   }
 
   renderMonths() {
@@ -96,7 +110,7 @@ class App extends React.Component {
           <p className="text-xs-center">{MONTHS[endDate.getMonth()]}</p>
           <CalendarHeatmap
             endDate={endDate}
-            numDays={30}
+            numDays={numDays}
             horizontal={false}
             showMonthLabels={false}
             values={[]}
@@ -108,10 +122,14 @@ class App extends React.Component {
 
   renderWeek() {
     const size = `${100 / 7.0}%`;
-    return _.range(7).map((index) => {
+    return _.range(-today.getDay(), -today.getDay() + 7).map((index) => {
+      const date = new Date(currentYear, currentMonth, currentDate + index);
       return (
-        <div key={index} className={index === currentDay ? 'day active' : 'day'} style={{ width: size }}>
-          <CircularProgressbar percentage={0} textForPercentage={(percentage) => DAYS[index]} />
+        <div key={index} className={currentDay === date.getDay() ? 'day active' : 'day'} style={{ width: size }}>
+          <CircularProgressbar
+            percentage={this.getCompletion(date)}
+            textForPercentage={(percentage) => DAYS[date.getDay()]}
+          />
         </div>
       );
     });
@@ -122,7 +140,7 @@ class App extends React.Component {
       <ul className="goals list-unstyled">
         {
           this.state.goals.map((goal) => {
-            const complete = this.state.completedGoals[goal.id];
+            const complete = this.state.completedGoals[today.toISOString()][goal.id];
 
             return (
               <li key={goal.id} className={complete ? null : 'active'}>
@@ -184,7 +202,7 @@ class App extends React.Component {
         <div className="container">
           <div className="row m-y-3">
             <div className="col-xs-12 col-sm-6 offset-sm-3">
-              <h1 className="text-xs-center">ambition</h1>
+              <h1 className="text-xs-center m-b-3">ambition</h1>
 
               <div className="months">
                 {this.renderMonths()}

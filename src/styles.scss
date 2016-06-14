@@ -42,16 +42,14 @@ a {
   padding: 5px;
   cursor: pointer;
 
+  .CircularProgressbar .CircularProgressbar-text {
+    fill: #999;
+  }
+
   &.active {
-    background: $highlightColor;
-    border-radius: 4px;
-
     .CircularProgressbar .CircularProgressbar-text {
-      fill: #fff;
-    }
-
-    .CircularProgressbar .CircularProgressbar-trail {
-      stroke: #fff;
+      fill: $highlightColor;
+      font-weight: bold;
     }
   }
 }
