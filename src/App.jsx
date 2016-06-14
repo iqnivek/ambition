@@ -86,8 +86,9 @@ class App extends React.Component {
   }
 
   onSubmitNewGoal() {
+    const newGoal = Object.assign({}, this.state.newGoal);
     this.setState({
-      goals: this.state.goals.concat(this.state.newGoal),
+      goals: this.state.goals.concat(newGoal),
       newGoal: null,
     });
   }
@@ -141,11 +142,10 @@ class App extends React.Component {
   }
 
   renderWeek() {
-    const size = `${100 / 7.0}%`;
     return _.range(-today.getDay(), -today.getDay() + 7).map((index) => {
       const date = new Date(currentYear, currentMonth, currentDate + index);
       return (
-        <div key={index} className={currentDay === date.getDay() ? 'day active' : 'day'} style={{ width: size }}>
+        <div key={index} className={currentDay === date.getDay() ? 'day active' : 'day'}>
           <CircularProgressbar
             percentage={this.getCompletion(date)}
             textForPercentage={(percentage) => DAYS[date.getDay()]}
@@ -225,14 +225,14 @@ class App extends React.Component {
       <div>
         <div className="container">
           <div className="row m-y-3">
-            <div className="col-xs-12 col-sm-6 offset-sm-3">
+            <div className="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3">
               <h1 className="text-xs-center m-b-3">ambition</h1>
 
               <div className="months">
                 {this.renderMonths()}
               </div>
 
-              <div className="m-t-3">
+              <div className="week m-t-3">
                 {this.renderWeek()}
               </div>
 

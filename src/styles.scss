@@ -41,19 +41,23 @@ a {
   }
 }
 
-.day {
-  display: inline-block;
-  padding: 5px;
-  cursor: pointer;
+.week {
+  display: flex;
 
-  .CircularProgressbar .CircularProgressbar-text {
-    fill: #999;
-  }
+  .day {
+    flex: 1;
+    padding: 5px;
+    cursor: pointer;
 
-  &.active {
     .CircularProgressbar .CircularProgressbar-text {
-      fill: $highlightColor;
-      font-weight: bold;
+      fill: #999;
+    }
+
+    &.active {
+      .CircularProgressbar .CircularProgressbar-text {
+        fill: $highlightColor;
+        font-weight: bold;
+      }
     }
   }
 }
