@@ -19,6 +19,23 @@ function numDaysInMonth(year, month) {
   return new Date(year, month, 0).getDate();
 }
 
+function calendarClassForValue(value) {
+  if (!value) {
+    return 'color-gitlab-0';
+  }
+  if (value.completion <= 0) {
+    return 'color-gitlab-0';
+  } else if (value.completion < 25) {
+    return 'color-gitlab-1';
+  } else if (value.completion < 50) {
+    return 'color-gitlab-2';
+  } else if (value.completion < 75) {
+    return 'color-gitlab-3';
+  } else {
+    return 'color-gitlab-4';
+  }
+}
+
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -113,7 +130,10 @@ class App extends React.Component {
             numDays={numDays}
             horizontal={false}
             showMonthLabels={false}
-            values={[]}
+            values={[
+              { date: today, completion: this.getCompletion(today) }
+            ]}
+            classForValue={calendarClassForValue}
           />
         </div>
       );
