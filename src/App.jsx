@@ -47,6 +47,17 @@ const currentMonth = today.getMonth();
 const currentDate = today.getDate();
 const currentDay = today.getDay();
 
+const initialState = {
+  goals: [
+    { id: 1, name: 'wake up early' },
+    { id: 2, name: 'go to gym' },
+  ],
+  completedGoals: {
+    [todayISO]: {}
+  },
+  newGoal: null,
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -54,17 +65,9 @@ class App extends React.Component {
     const localData = localStorage.getItem('state');
     const localState = localData ? JSON.parse(localData) : null;
 
-    this.state = localState || {
-      goals: [
-        { id: 1, name: 'wake up early' },
-        { id: 2, name: 'go to gym' },
-      ],
-      completedGoals: {
-        [todayISO]: {}
-      },
-      newGoal: null,
-    };
+    this.state = localState || initialState;
 
+    this.onClearData = this.onClearData.bind(this);
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
@@ -73,6 +76,10 @@ class App extends React.Component {
 
   componentDidUpdate() {
     localStorage.setItem('state', JSON.stringify(this.state));
+  }
+
+  onClearData() {
+    this.setState(initialState);
   }
 
   onClickNewGoal() {
@@ -250,6 +257,10 @@ class App extends React.Component {
                 {this.renderGoals()}
 
                 {this.renderAddGoal()}
+              </div>
+
+              <div className="text-xs-center m-t-3">
+                <small><a className="text-muted" href="#" onClick={this.onClearData}>clear data</a></small>
               </div>
             </div>
           </div>
