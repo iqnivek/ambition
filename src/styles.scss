@@ -56,6 +56,7 @@ a {
 
 .goals {
   li {
+    cursor: pointer;
     color: #fff;
     background: $highlightColor;
     padding: 1em;
@@ -71,7 +72,6 @@ a {
 }
 
 .goal-checkbox {
-  cursor: pointer;
   margin-right: 15px;
 
   i {

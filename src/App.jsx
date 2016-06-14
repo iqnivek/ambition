@@ -107,7 +107,7 @@ class App extends React.Component {
       const numDays = numDaysInMonth(currentMonth, currentMonth + index);
       return (
         <div key={index} className="month">
-          <p className="text-xs-center">{MONTHS[endDate.getMonth()]}</p>
+          <p className="text-muted text-xs-center">{MONTHS[endDate.getMonth()]}</p>
           <CalendarHeatmap
             endDate={endDate}
             numDays={numDays}
@@ -143,8 +143,12 @@ class App extends React.Component {
             const complete = this.state.completedGoals[today.toISOString()][goal.id];
 
             return (
-              <li key={goal.id} className={complete ? null : 'active'}>
-                <span className="goal-checkbox" onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}>
+              <li
+                key={goal.id}
+                className={complete ? null : 'active'}
+                onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}
+              >
+                <span className="goal-checkbox">
                   <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle-thin')} />
                 </span>
                 {goal.name}
