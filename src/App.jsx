@@ -145,7 +145,7 @@ class App extends React.Component {
     return _.range(-today.getDay(), -today.getDay() + 7).map((index) => {
       const date = new Date(currentYear, currentMonth, currentDate + index);
       return (
-        <div key={index} className={currentDay === date.getDay() ? 'day active' : 'day'}>
+        <div key={index} className={classNames('day', { 'active': currentDay === date.getDay() })}>
           <CircularProgressbar
             percentage={this.getCompletion(date)}
             textForPercentage={(percentage) => DAYS[date.getDay()]}
@@ -165,7 +165,7 @@ class App extends React.Component {
             return (
               <li
                 key={goal.id}
-                className={complete ? null : 'active'}
+                className={classNames({ 'active': !complete })}
                 onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}
               >
                 <span className="goal-checkbox">
