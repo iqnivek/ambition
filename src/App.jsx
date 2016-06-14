@@ -41,6 +41,7 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 
 const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const todayISO = today.toISOString();
 const currentYear = today.getFullYear();
 const currentMonth = today.getMonth();
 const currentDate = today.getDate();
@@ -56,7 +57,7 @@ class App extends React.Component {
         { id: 2, name: 'go to gym' },
       ],
       completedGoals: {
-        [today.toISOString()]: {
+        [todayISO]: {
           2: true,
         }
       },
@@ -104,7 +105,7 @@ class App extends React.Component {
   onCompleteGoal(goalID, complete) {
     this.setState(update(this.state, {
       completedGoals: {
-        [today.toISOString()]: {
+        [todayISO]: {
           [goalID]: { $set: complete }
         }
       }
@@ -164,7 +165,7 @@ class App extends React.Component {
       <ul className="goals list-unstyled">
         {
           this.state.goals.map((goal) => {
-            const complete = this.state.completedGoals[today.toISOString()][goal.id];
+            const complete = this.state.completedGoals[todayISO][goal.id];
 
             return (
               <li
