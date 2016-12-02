@@ -1,9 +1,10 @@
 import React from 'react';
-import update from 'react-addons-update';
+import _ from 'lodash';
+import axios from 'axios';
 import classNames from 'classnames';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import CircularProgressbar from 'react-circular-progressbar';
-import _ from 'lodash';
+import update from 'react-addons-update';
 
 function shiftDate(date, numDays) {
   const newDate = new Date(date);
@@ -50,7 +51,7 @@ const currentDay = today.getDay();
 const initialState = {
   goals: [
     { id: 1, name: 'wake up early' },
-    { id: 2, name: 'go to gym' },
+    { id: 2, name: 'go to the gym' },
   ],
   completedGoals: {
     [todayISO]: {}
@@ -72,6 +73,11 @@ class App extends React.Component {
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
+
+    axios.get('/api/goals')
+      .then((response) => {
+        console.log('goals', response);
+      })
   }
 
   componentDidUpdate() {
