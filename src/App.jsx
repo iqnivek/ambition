@@ -50,8 +50,6 @@ const currentDay = today.getDay();
 
 const initialState = {
   goals: [
-    { id: 1, name: 'wake up early' },
-    { id: 2, name: 'go to the gym' },
   ],
   completedGoals: {
     [todayISO]: {}
@@ -73,15 +71,20 @@ class App extends React.Component {
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
+  }
 
-    axios.get('/api/goals')
-      .then((response) => {
-        console.log('goals', response);
-      })
+  componentDidMount() {
+    axios.get(
+      '/api/goals'
+    ).then((response) => {
+      this.setState({
+        goals: response.data
+      });
+    });
   }
 
   componentDidUpdate() {
-    localStorage.setItem('state', JSON.stringify(this.state));
+    // localStorage.setItem('state', JSON.stringify(this.state));
   }
 
   onClearData() {
@@ -183,7 +186,7 @@ class App extends React.Component {
       <ul className="goals list-unstyled">
         {
           this.state.goals.map((goal) => {
-            const complete = this.state.completedGoals[todayISO][goal.id];
+            const complete = false;
 
             return (
               <li
