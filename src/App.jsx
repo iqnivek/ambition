@@ -61,10 +61,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    const localData = localStorage.getItem('state');
-    const localState = localData ? JSON.parse(localData) : null;
-
-    this.state = localState || initialState;
+    this.state = initialState;
 
     this.onClearData = this.onClearData.bind(this);
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
@@ -81,10 +78,6 @@ class App extends React.Component {
         goals: response.data
       });
     });
-  }
-
-  componentDidUpdate() {
-    // localStorage.setItem('state', JSON.stringify(this.state));
   }
 
   onClearData() {
