@@ -3,7 +3,6 @@ import _ from 'lodash';
 import axios from 'axios';
 import classNames from 'classnames';
 import CalendarHeatmap from 'react-calendar-heatmap';
-import CircularProgressbar from 'react-circular-progressbar';
 import update from 'immutability-helper';
 
 function shiftDate(date, numDays) {
@@ -244,10 +243,6 @@ class App extends React.Component {
 
               <div className="months">
                 {this.renderMonths()}
-              </div>
-
-              <div className="week m-t-3">
-                {this.renderWeek()}
               </div>
 
               <div className="m-t-3">
