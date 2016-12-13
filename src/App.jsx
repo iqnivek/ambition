@@ -58,7 +58,6 @@ class App extends React.Component {
 
     this.state = initialState;
 
-    this.onClearData = this.onClearData.bind(this);
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
@@ -75,10 +74,6 @@ class App extends React.Component {
         goalCompletions: goalCompletionsResponse.data,
       });
     }));
-  }
-
-  onClearData() {
-    this.setState(initialState);
   }
 
   onClickNewGoal() {
@@ -243,10 +238,6 @@ class App extends React.Component {
                 {this.renderGoals()}
 
                 {this.renderAddGoal()}
-              </div>
-
-              <div className="text-xs-center m-t-3">
-                <small><a className="text-muted" href="#" onClick={this.onClearData}>clear data</a></small>
               </div>
             </div>
           </div>
