@@ -124,12 +124,9 @@ class App extends React.Component {
     event.preventDefault();
   }
 
-  getCompletion(date) {
-    const numCompleted = _.reduce(this.state.completedGoals[date.toISOString()], (total, isComplete) => {
-      return total + (isComplete ? 1 : 0);
-    }, 0);
-
-    return numCompleted * 100.0 / this.state.goals.length;
+  getGoalCompletion(id) {
+    const match = this.state.goalCompletions.filter(({ time, goalID }) => goalID === id);
+    return (match.length > 0) ? match[0] : null;
   }
 
   renderMonths() {
@@ -145,23 +142,9 @@ class App extends React.Component {
             horizontal={false}
             showMonthLabels={false}
             values={[
-              { date: today, completion: this.getCompletion(today) }
+              { date: today, completion: 100 }
             ]}
             classForValue={calendarClassForValue}
-          />
-        </div>
-      );
-    });
-  }
-
-  renderWeek() {
-    return _.range(-today.getDay(), -today.getDay() + 7).map((index) => {
-      const date = new Date(currentYear, currentMonth, currentDate + index);
-      return (
-        <div key={index} className={classNames('day', { 'active': currentDay === date.getDay() })}>
-          <CircularProgressbar
-            percentage={this.getCompletion(date)}
-            textForPercentage={(percentage) => DAYS[date.getDay()]}
           />
         </div>
       );
@@ -173,7 +156,7 @@ class App extends React.Component {
       <ul className="goals list-unstyled">
         {
           this.state.goals.map((goal) => {
-            const complete = false;
+            const complete = this.getGoalCompletion(goal.id);
 
             return (
               <li
