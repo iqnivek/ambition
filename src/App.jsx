@@ -112,12 +112,16 @@ class App extends React.Component {
   }
 
   onCompleteGoal(goalID, complete) {
-    this.setState(update(this.state, {
-      goalCompletions: { $push: [{
-        time: (new Date()).toISOString(),
-        goalID: goalID,
-      }] }
-    }));
+    axios.post('/api/goal_completions', {
+      time: (new Date()).toISOString(),
+      goal_id: goalID
+    }).then((response) => {
+      console.log('onCompleteGoal', response);
+
+      this.setState(update(this.state, {
+        goalCompletions: { $push: [response.data] }
+      }));
+    });
   }
 
   onFormSubmit(event) {
@@ -125,7 +129,7 @@ class App extends React.Component {
   }
 
   getGoalCompletion(id) {
-    const match = this.state.goalCompletions.filter(({ time, goalID }) => goalID === id);
+    const match = this.state.goalCompletions.filter(({ time, goal_id }) => goal_id === id);
     return (match.length > 0) ? match[0] : null;
   }
 
