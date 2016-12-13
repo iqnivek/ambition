@@ -66,13 +66,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(
-      '/api/goals'
-    ).then((response) => {
+    axios.all([
+      axios.get('/api/goals'),
+      axios.get('/api/goal_completions', { params: { date: now.toISOString() } }),
+    ]).then(axios.spread((goalsResponse, goalCompletionsResponse) => {
       this.setState({
-        goals: response.data
+        goals: goalsResponse.data,
+        goalCompletions: goalCompletionsResponse.data,
       });
-    });
+    }));
   }
 
   onClearData() {
