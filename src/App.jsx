@@ -4,7 +4,7 @@ import axios from 'axios';
 import classNames from 'classnames';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import CircularProgressbar from 'react-circular-progressbar';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 function shiftDate(date, numDays) {
   const newDate = new Date(date);
@@ -42,18 +42,14 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 
 const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const todayISO = today.toISOString();
 const currentYear = today.getFullYear();
 const currentMonth = today.getMonth();
 const currentDate = today.getDate();
 const currentDay = today.getDay();
 
 const initialState = {
-  goals: [
-  ],
-  completedGoals: {
-    [todayISO]: {}
-  },
+  goals: [],
+  goalCompletions: [],
   newGoal: null,
 };
 
@@ -118,11 +114,10 @@ class App extends React.Component {
 
   onCompleteGoal(goalID, complete) {
     this.setState(update(this.state, {
-      completedGoals: {
-        [todayISO]: {
-          [goalID]: { $set: complete }
-        }
-      }
+      goalCompletions: { $push: [{
+        time: (new Date()).toISOString(),
+        goalID: goalID,
+      }] }
     }));
   }
 
