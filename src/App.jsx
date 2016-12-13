@@ -116,7 +116,8 @@ class App extends React.Component {
   onCompleteGoal(goalID, complete) {
     axios.post('/api/goal_completions', {
       time: (new Date()).toISOString(),
-      goal_id: goalID
+      goal_id: goalID,
+      complete: complete,
     }).then((response) => {
       console.log('onCompleteGoal', response);
 
@@ -131,8 +132,11 @@ class App extends React.Component {
   }
 
   getGoalCompletion(id) {
-    const match = this.state.goalCompletions.filter(({ time, goal_id }) => goal_id === id);
-    return (match.length > 0) ? match[0] : null;
+    const latestCompletions = this.state.goalCompletions
+      .filter(({ time, goal_id }) => goal_id === id)
+      .sort(({ time }) => time)
+      .reverse();
+    return (latestCompletions.length > 0) && latestCompletions[0].complete;
   }
 
   renderMonths() {
