@@ -79,9 +79,7 @@ class App extends React.Component {
   onClickNewGoal() {
     this.setState({
       newGoal: {
-        id: Math.random(), // TODO
         name: '',
-        timesPerWeek: 7,
       }
     });
   }
@@ -93,10 +91,15 @@ class App extends React.Component {
   }
 
   onSubmitNewGoal() {
-    const newGoal = Object.assign({}, this.state.newGoal);
-    this.setState({
-      goals: this.state.goals.concat(newGoal),
-      newGoal: null,
+    axios.post(
+      '/api/goals',
+      this.state.newGoal
+    ).then((response) => {
+      const newGoal = response.data;
+      this.setState(update(this.state, {
+        goals: { $push: [newGoal] },
+        newGoal: { $set: null },
+      }));
     });
   }
 
@@ -172,7 +175,7 @@ class App extends React.Component {
           </div>
 
           <div className="text-xs-center">
-            <p>how many times per week?</p>
+            <p>which days of the week?</p>
             {_.range(7).map((index) => (
               <span key={index} className="count-circle">
                 <i className="fa fa-circle" />
