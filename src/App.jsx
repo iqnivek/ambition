@@ -1,3 +1,6 @@
+// TODO use material-ui and flexboxgrid?
+// or just pull in react-bootstrap modal
+
 import React from 'react';
 import _ from 'lodash';
 import axios from 'axios';
@@ -98,35 +101,34 @@ class App extends React.Component {
     return (latestCompletions.length > 0) && latestCompletions[0].complete;
   }
 
+  // TODO make this a modal
   renderNewGoal() {
     return (
-      <li className="active">
-        <form onSubmit={this.onFormSubmit}>
-          <div className="form-group">
-            <p className="text-xs-center">what's your goal?</p>
-            <input
-              type="text"
-              className="form-control"
-              value={this.state.newGoal.name}
-              autoFocus
-              onChange={this.onChangeGoalName}
-            />
-          </div>
+      <form onSubmit={this.onFormSubmit}>
+        <div className="form-group">
+          <p className="text-xs-center">what's your goal?</p>
+          <input
+            type="text"
+            className="form-control"
+            value={this.state.newGoal.name}
+            autoFocus
+            onChange={this.onChangeGoalName}
+          />
+        </div>
 
-          <div className="text-xs-center">
-            <p>which days of the week?</p>
-            {_.range(7).map((index) => (
-              <span key={index} className="count-circle">
-                <i className="fa fa-circle" />
-              </span>
-            ))}
-            <div className="m-t-2">
-              <button className="btn btn-outline-primary" onClick={this.onSubmitNewGoal}>Add goal</button>
-              <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelNewGoal}>Cancel</button>
-            </div>
+        <div className="text-xs-center">
+          <p>which days of the week?</p>
+          {_.range(7).map((index) => (
+            <span key={index} className="count-circle">
+              <i className="fa fa-circle" />
+            </span>
+          ))}
+          <div className="m-t-2">
+            <button className="btn btn-outline-primary" onClick={this.onSubmitNewGoal}>Add goal</button>
+            <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelNewGoal}>Cancel</button>
           </div>
-        </form>
-      </li>
+        </div>
+      </form>
     );
   }
 
@@ -151,7 +153,6 @@ class App extends React.Component {
             );
           })
         }
-        {this.state.newGoal ? this.renderNewGoal() : null}
       </ul>
     );
   }
@@ -176,6 +177,7 @@ class App extends React.Component {
 
               <div className="m-t-3">
                 {this.renderGoals()}
+                {this.state.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
               </div>
             </div>
