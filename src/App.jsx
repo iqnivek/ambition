@@ -201,7 +201,7 @@ class App extends React.Component {
             return (
               <li
                 key={goal.id}
-                className={classNames({ 'active': !complete })}
+                className={classNames('goal', { 'active': !complete })}
                 onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}
               >
                 <span className="goal-checkbox">
