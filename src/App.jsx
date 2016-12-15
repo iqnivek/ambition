@@ -1,3 +1,5 @@
+// TODO use router to show full completion history (vertical months)
+
 // TODO add ordering/dragdrop?
 
 // TODO use react-bootstrap? flexboxgrid?
@@ -8,6 +10,7 @@ import axios from 'axios';
 import classNames from 'classnames';
 import update from 'immutability-helper';
 import CompletionHistory from './CompletionHistory';
+import Month from './Month';
 
 class App extends React.Component {
   constructor(props) {
@@ -120,6 +123,7 @@ class App extends React.Component {
               <i className="fa fa-circle" />
             </span>
           ))}
+
           <div className="m-t-2">
             <button className="btn btn-outline-primary" onClick={this.onSubmitNewGoal}>Add goal</button>
             <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelNewGoal}>Cancel</button>
@@ -163,16 +167,20 @@ class App extends React.Component {
   }
 
   render() {
+    const today = new Date();
     return (
       <div>
         <div className="container">
-          <div className="row m-y-3">
+          <div className="row my-3">
             <div className="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3">
-              <h1 className="text-xs-center m-b-3">ambition</h1>
+              <h1 className="text-xs-center mb-3">ambition</h1>
+              <div className="row">
+                <div className="col-xs-8 offset-xs-2">
+                  <Month date={today} />
+                </div>
+              </div>
 
-              <CompletionHistory />
-
-              <div className="m-t-3">
+              <div className="mt-3">
                 {this.renderGoals()}
                 {this.state.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
