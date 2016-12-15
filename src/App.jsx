@@ -1,5 +1,6 @@
-// TODO use material-ui and flexboxgrid?
-// or just pull in react-bootstrap modal
+// TODO add ordering/dragdrop?
+
+// TODO use react-bootstrap? flexboxgrid?
 
 import React from 'react';
 import _ from 'lodash';
@@ -8,19 +9,15 @@ import classNames from 'classnames';
 import update from 'immutability-helper';
 import CompletionHistory from './CompletionHistory';
 
-const now = new Date();
-
-const initialState = {
-  goals: [],
-  goalCompletions: [],
-  newGoal: null,
-};
-
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = initialState;
+    this.state = {
+      goals: [],
+      goalCompletions: [],
+      newGoal: null,
+    };
 
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
@@ -31,7 +28,7 @@ class App extends React.Component {
   componentDidMount() {
     axios.all([
       axios.get('/api/goals'),
-      axios.get('/api/goal_completions', { params: { date: now.toISOString() } }),
+      axios.get('/api/goal_completions', { params: { date: (new Date()).toISOString() } }),
     ]).then(axios.spread((goalsResponse, goalCompletionsResponse) => {
       this.setState({
         goals: goalsResponse.data,
