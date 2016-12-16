@@ -64,7 +64,6 @@ a {
 
 .goals {
   li {
-    cursor: pointer;
     color: #fff;
     background: $highlightColor;
     padding: 1em;
@@ -76,6 +75,9 @@ a {
       color: #999;
       background: #fff;
     }
+  }
+  .goal {
+    cursor: pointer;
   }
 }
 

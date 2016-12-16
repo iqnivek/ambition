@@ -1,99 +1,49 @@
+// TODO use router to show full completion history (vertical months)
+
+// TODO add ordering/dragdrop?
+
+// TODO use react-bootstrap? flexboxgrid?
+
 import React from 'react';
 import _ from 'lodash';
 import axios from 'axios';
 import classNames from 'classnames';
-import CalendarHeatmap from 'react-calendar-heatmap';
-import CircularProgressbar from 'react-circular-progressbar';
-import update from 'react-addons-update';
-
-function shiftDate(date, numDays) {
-  const newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + numDays);
-  return newDate;
-}
-
-function lastDayOfMonth(year, month) {
-  return new Date(year, month + 1, 0);
-}
-
-function numDaysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
-}
-
-function calendarClassForValue(value) {
-  if (!value) {
-    return 'color-gitlab-0';
-  }
-  if (value.completion <= 0) {
-    return 'color-gitlab-0';
-  } else if (value.completion < 25) {
-    return 'color-gitlab-1';
-  } else if (value.completion < 50) {
-    return 'color-gitlab-2';
-  } else if (value.completion < 75) {
-    return 'color-gitlab-3';
-  } else {
-    return 'color-gitlab-4';
-  }
-}
-
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const todayISO = today.toISOString();
-const currentYear = today.getFullYear();
-const currentMonth = today.getMonth();
-const currentDate = today.getDate();
-const currentDay = today.getDay();
-
-const initialState = {
-  goals: [
-    { id: 1, name: 'wake up early' },
-    { id: 2, name: 'go to the gym' },
-  ],
-  completedGoals: {
-    [todayISO]: {}
-  },
-  newGoal: null,
-};
+import update from 'immutability-helper';
+import CompletionHistory from './CompletionHistory';
+import Month from './Month';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    const localData = localStorage.getItem('state');
-    const localState = localData ? JSON.parse(localData) : null;
+    this.state = {
+      goals: [],
+      goalCompletions: [],
+      newGoal: null,
+    };
 
-    this.state = localState || initialState;
-
-    this.onClearData = this.onClearData.bind(this);
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
-
-    axios.get('/api/goals')
-      .then((response) => {
-        console.log('goals', response);
-      })
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('state', JSON.stringify(this.state));
-  }
-
-  onClearData() {
-    this.setState(initialState);
+  componentDidMount() {
+    axios.all([
+      axios.get('/api/goals'),
+      axios.get('/api/goal_completions', { params: { date: (new Date()).toISOString() } }),
+    ]).then(axios.spread((goalsResponse, goalCompletionsResponse) => {
+      this.setState({
+        goals: goalsResponse.data,
+        goalCompletions: goalCompletionsResponse.data,
+      });
+    }));
   }
 
   onClickNewGoal() {
     this.setState({
       newGoal: {
-        id: Math.random(), // TODO
         name: '',
-        timesPerWeek: 7,
       }
     });
   }
@@ -105,10 +55,15 @@ class App extends React.Component {
   }
 
   onSubmitNewGoal() {
-    const newGoal = Object.assign({}, this.state.newGoal);
-    this.setState({
-      goals: this.state.goals.concat(newGoal),
-      newGoal: null,
+    axios.post(
+      '/api/goals',
+      this.state.newGoal
+    ).then((response) => {
+      const newGoal = response.data;
+      this.setState(update(this.state, {
+        goals: { $push: [newGoal] },
+        newGoal: { $set: null },
+      }));
     });
   }
 
@@ -121,61 +76,61 @@ class App extends React.Component {
   }
 
   onCompleteGoal(goalID, complete) {
-    this.setState(update(this.state, {
-      completedGoals: {
-        [todayISO]: {
-          [goalID]: { $set: complete }
-        }
-      }
-    }));
+    axios.post('/api/goal_completions', {
+      time: (new Date()).toISOString(),
+      goal_id: goalID,
+      complete: complete,
+    }).then((response) => {
+      console.log('onCompleteGoal', response);
+
+      this.setState(update(this.state, {
+        goalCompletions: { $push: [response.data] }
+      }));
+    });
   }
 
   onFormSubmit(event) {
     event.preventDefault();
   }
 
-  getCompletion(date) {
-    const numCompleted = _.reduce(this.state.completedGoals[date.toISOString()], (total, isComplete) => {
-      return total + (isComplete ? 1 : 0);
-    }, 0);
-
-    return numCompleted * 100.0 / this.state.goals.length;
+  getGoalCompletion(id) {
+    const latestCompletions = this.state.goalCompletions
+      .filter(({ time, goal_id }) => goal_id === id)
+      .sort(({ time }) => time)
+      .reverse();
+    return (latestCompletions.length > 0) && latestCompletions[0].complete;
   }
 
-  renderMonths() {
-    return [-3, -2, -1, 0].map((index) => {
-      const endDate = lastDayOfMonth(currentYear, currentMonth + index);
-      const numDays = numDaysInMonth(currentMonth, currentMonth + index);
-      return (
-        <div key={index} className="month">
-          <p className="text-muted text-xs-center">{MONTHS[endDate.getMonth()]}</p>
-          <CalendarHeatmap
-            endDate={endDate}
-            numDays={numDays}
-            horizontal={false}
-            showMonthLabels={false}
-            values={[
-              { date: today, completion: this.getCompletion(today) }
-            ]}
-            classForValue={calendarClassForValue}
+  // TODO make this a modal
+  renderNewGoal() {
+    return (
+      <form onSubmit={this.onFormSubmit}>
+        <div className="form-group">
+          <p className="text-xs-center">what's your goal?</p>
+          <input
+            type="text"
+            className="form-control"
+            value={this.state.newGoal.name}
+            autoFocus
+            onChange={this.onChangeGoalName}
           />
         </div>
-      );
-    });
-  }
 
-  renderWeek() {
-    return _.range(-today.getDay(), -today.getDay() + 7).map((index) => {
-      const date = new Date(currentYear, currentMonth, currentDate + index);
-      return (
-        <div key={index} className={classNames('day', { 'active': currentDay === date.getDay() })}>
-          <CircularProgressbar
-            percentage={this.getCompletion(date)}
-            textForPercentage={(percentage) => DAYS[date.getDay()]}
-          />
+        <div className="text-xs-center">
+          <p>which days of the week?</p>
+          {_.range(7).map((index) => (
+            <span key={index} className="count-circle">
+              <i className="fa fa-circle" />
+            </span>
+          ))}
+
+          <div className="m-t-2">
+            <button className="btn btn-outline-primary" onClick={this.onSubmitNewGoal}>Add goal</button>
+            <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelNewGoal}>Cancel</button>
+          </div>
         </div>
-      );
-    });
+      </form>
+    );
   }
 
   renderGoals() {
@@ -183,12 +138,12 @@ class App extends React.Component {
       <ul className="goals list-unstyled">
         {
           this.state.goals.map((goal) => {
-            const complete = this.state.completedGoals[todayISO][goal.id];
+            const complete = this.getGoalCompletion(goal.id);
 
             return (
               <li
                 key={goal.id}
-                className={classNames({ 'active': !complete })}
+                className={classNames('goal', { 'active': !complete })}
                 onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}
               >
                 <span className="goal-checkbox">
@@ -198,38 +153,6 @@ class App extends React.Component {
               </li>
             );
           })
-        }
-
-        {
-          this.state.newGoal ? (
-            <li className="active">
-              <form onSubmit={this.onFormSubmit}>
-                <div className="form-group">
-                  <p className="text-xs-center">what's your goal?</p>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={this.state.newGoal.name}
-                    autoFocus
-                    onChange={this.onChangeGoalName}
-                  />
-                </div>
-
-                <div className="text-xs-center">
-                  <p>how many times per week?</p>
-                  {_.range(7).map((index) => (
-                    <span key={index} className="count-circle">
-                      <i className="fa fa-circle" />
-                    </span>
-                  ))}
-                  <div className="m-t-2">
-                    <button className="btn btn-outline-primary" onClick={this.onSubmitNewGoal}>Add goal</button>
-                    <button className="btn btn-outline-secondary m-l-1" onClick={this.onCancelNewGoal}>Cancel</button>
-                  </div>
-                </div>
-              </form>
-            </li>
-          ) : null
         }
       </ul>
     );
@@ -244,29 +167,23 @@ class App extends React.Component {
   }
 
   render() {
+    const today = new Date();
     return (
       <div>
         <div className="container">
-          <div className="row m-y-3">
+          <div className="row my-3">
             <div className="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3">
-              <h1 className="text-xs-center m-b-3">ambition</h1>
-
-              <div className="months">
-                {this.renderMonths()}
+              <h1 className="text-xs-center mb-3">ambition</h1>
+              <div className="row">
+                <div className="col-xs-8 offset-xs-2">
+                  <Month date={today} />
+                </div>
               </div>
 
-              <div className="week m-t-3">
-                {this.renderWeek()}
-              </div>
-
-              <div className="m-t-3">
+              <div className="mt-3">
                 {this.renderGoals()}
-
+                {this.state.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
-              </div>
-
-              <div className="text-xs-center m-t-3">
-                <small><a className="text-muted" href="#" onClick={this.onClearData}>clear data</a></small>
               </div>
             </div>
           </div>
