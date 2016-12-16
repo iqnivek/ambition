@@ -1,7 +1,6 @@
+// TODO add circular progressbar for today's progress
 // TODO use router to show full completion history (vertical months)
-
 // TODO add ordering/dragdrop?
-
 // TODO use react-bootstrap? flexboxgrid?
 
 import React from 'react';
