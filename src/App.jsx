@@ -19,6 +19,7 @@ class App extends React.Component {
     this.state = {
       goals: [],
       goalCompletions: [],
+      goalCompletionHistories: [],
       newGoal: null,
     };
 
@@ -32,10 +33,12 @@ class App extends React.Component {
     axios.all([
       axios.get('/api/goals'),
       axios.get('/api/goal_completions', { params: { date: (new Date()).toISOString() } }),
-    ]).then(axios.spread((goalsResponse, goalCompletionsResponse) => {
+      axios.get('/api/goal_completion_histories'),
+    ]).then(axios.spread((goalsResponse, goalCompletionsResponse, goalCompletionHistoriesResponse) => {
       this.setState({
         goals: goalsResponse.data,
         goalCompletions: goalCompletionsResponse.data,
+        goalCompletionHistories: goalCompletionHistoriesResponse.data,
       });
     }));
   }
@@ -176,7 +179,7 @@ class App extends React.Component {
               <h1 className="text-xs-center mb-3">ambition</h1>
               <div className="row">
                 <div className="col-xs-8 offset-xs-2">
-                  <Month date={today} />
+                  <Month date={today} values={this.state.goalCompletionHistories} />
                 </div>
               </div>
 

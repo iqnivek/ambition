@@ -21,13 +21,15 @@ function calendarClassForValue(value) {
   if (!value) {
     return 'color-gitlab-0';
   }
-  if (value.completion <= 0) {
+
+  const completion = value.completed_score / value.target_score;
+  if (completion <= 0) {
     return 'color-gitlab-0';
-  } else if (value.completion < 25) {
+  } else if (completion < 0.25) {
     return 'color-gitlab-1';
-  } else if (value.completion < 50) {
+  } else if (completion < 0.50) {
     return 'color-gitlab-2';
-  } else if (value.completion < 75) {
+  } else if (completion < 0.75) {
     return 'color-gitlab-3';
   } else {
     return 'color-gitlab-4';
@@ -47,7 +49,7 @@ class Month extends React.Component {
           numDays={numDays}
           horizontal={false}
           showMonthLabels={false}
-          values={[]}
+          values={this.props.values}
           classForValue={calendarClassForValue}
           gutterSize={0.5}
         />
