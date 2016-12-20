@@ -8,17 +8,16 @@ import _ from 'lodash';
 import axios from 'axios';
 import classNames from 'classnames';
 import update from 'immutability-helper';
+import { connect } from 'react-redux';
 import CompletionHistory from './CompletionHistory';
 import Month from './Month';
+import { fetchGoals } from './actions';
 
 class Goals extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      goals: [],
-      goalCompletions: [],
-      goalCompletionHistories: [],
       newGoal: null,
     };
 
@@ -29,17 +28,7 @@ class Goals extends React.Component {
   }
 
   componentDidMount() {
-    axios.all([
-      axios.get('/api/goals'),
-      axios.get('/api/goal_completions', { params: { date: (new Date()).toISOString() } }),
-      axios.get('/api/goal_completion_histories'),
-    ]).then(axios.spread((goalsResponse, goalCompletionsResponse, goalCompletionHistoriesResponse) => {
-      this.setState({
-        goals: goalsResponse.data,
-        goalCompletions: goalCompletionsResponse.data,
-        goalCompletionHistories: goalCompletionHistoriesResponse.data,
-      });
-    }));
+    this.props.dispatch(fetchGoals());
   }
 
   onClickNewGoal() {
@@ -83,8 +72,6 @@ class Goals extends React.Component {
       goal_id: goalID,
       complete: complete,
     }).then((response) => {
-      console.log('onCompleteGoal', response);
-
       this.setState(update(this.state, {
         goalCompletions: { $push: [response.data] }
       }));
@@ -96,7 +83,7 @@ class Goals extends React.Component {
   }
 
   getGoalCompletion(id) {
-    const latestCompletions = this.state.goalCompletions
+    const latestCompletions = this.props.goalCompletions
       .filter(({ time, goal_id }) => goal_id === id)
       .sort(({ time }) => time)
       .reverse();
@@ -139,7 +126,7 @@ class Goals extends React.Component {
     return (
       <ul className="goals list-unstyled">
         {
-          this.state.goals.map((goal) => {
+          this.props.goals.map((goal) => {
             const complete = this.getGoalCompletion(goal.id);
 
             return (
@@ -178,7 +165,7 @@ class Goals extends React.Component {
               <h1 className="text-xs-center mb-3">ambition</h1>
               <div className="row">
                 <div className="col-xs-8 offset-xs-2">
-                  <Month date={today} values={this.state.goalCompletionHistories} />
+                  <Month date={today} values={this.props.goalCompletionHistories} />
                 </div>
               </div>
 
@@ -195,4 +182,9 @@ class Goals extends React.Component {
   }
 }
 
-export default Goals;
+// TODO
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps)(Goals);
