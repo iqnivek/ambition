@@ -17,10 +17,6 @@ class Goals extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      newGoal: null,
-    };
-
     this.onClickNewGoal = this.onClickNewGoal.bind(this);
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
@@ -32,10 +28,8 @@ class Goals extends React.Component {
   }
 
   onClickNewGoal() {
-    this.setState({
-      newGoal: {
-        name: '',
-      }
+    this.props.dispatch({
+      type: 'SHOW_NEW_GOAL'
     });
   }
 
@@ -48,7 +42,7 @@ class Goals extends React.Component {
   onSubmitNewGoal() {
     axios.post(
       '/api/goals',
-      this.state.newGoal
+      this.props.newGoal
     ).then((response) => {
       const newGoal = response.data;
       this.setState(update(this.state, {
@@ -99,7 +93,7 @@ class Goals extends React.Component {
           <input
             type="text"
             className="form-control"
-            value={this.state.newGoal.name}
+            value={this.props.newGoal.name}
             autoFocus
             onChange={this.onChangeGoalName}
           />
@@ -148,7 +142,7 @@ class Goals extends React.Component {
   }
 
   renderAddGoal() {
-    return !this.state.newGoal ? (
+    return !this.props.newGoal ? (
       <div className="text-xs-center">
         <button className="btn btn-lg btn-outline-primary" onClick={this.onClickNewGoal}>Add goal</button>
       </div>
@@ -171,7 +165,7 @@ class Goals extends React.Component {
 
               <div className="mt-3">
                 {this.renderGoals()}
-                {this.state.newGoal ? this.renderNewGoal() : null}
+                {this.props.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
               </div>
             </div>

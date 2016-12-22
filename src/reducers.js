@@ -25,6 +25,16 @@ const rootReducer = combineReducers({
         return state;
     }
   },
+  newGoal: (state = null, action) => {
+    switch (action.type) {
+      case 'SHOW_NEW_GOAL':
+        return {
+          name: '',
+        };
+      default:
+        return state;
+    }
+  },
 });
 
 export default rootReducer;
