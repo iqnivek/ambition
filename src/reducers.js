@@ -16,6 +16,8 @@ const rootReducer = combineReducers({
     switch (action.type) {
       case 'RECEIVE_GOAL_COMPLETIONS':
         return action.goalCompletions;
+      case 'CREATE_GOAL_COMPLETION':
+        return state.concat(action.goalCompletion);
       default:
         return state;
     }

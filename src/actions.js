@@ -39,3 +39,18 @@ export function createGoal(goal) {
     });
   };
 }
+
+export function createGoalCompletion(goalID, isComplete) {
+  return (dispatch) => {
+    axios.post('/api/goal_completions', {
+      time: (new Date()).toISOString(),
+      goal_id: goalID,
+      complete: isComplete,
+    }).then((response) => {
+      dispatch({
+        type: 'CREATE_GOAL_COMPLETION',
+        goalCompletion: response.data,
+      });
+    });
+  };
+}

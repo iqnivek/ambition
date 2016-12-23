@@ -11,7 +11,7 @@ import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import CompletionHistory from './CompletionHistory';
 import Month from './Month';
-import { createGoal, fetchGoals } from './actions';
+import { createGoal, createGoalCompletion, fetchGoals } from './actions';
 
 class Goals extends React.Component {
   constructor(props) {
@@ -53,16 +53,8 @@ class Goals extends React.Component {
     });
   }
 
-  onCompleteGoal(goalID, complete) {
-    axios.post('/api/goal_completions', {
-      time: (new Date()).toISOString(),
-      goal_id: goalID,
-      complete: complete,
-    }).then((response) => {
-      this.setState(update(this.state, {
-        goalCompletions: { $push: [response.data] }
-      }));
-    });
+  onCompleteGoal(goalID, isComplete) {
+    this.props.dispatch(createGoalCompletion(goalID, isComplete));
   }
 
   onFormSubmit(event) {
