@@ -30,6 +30,10 @@ a {
 .react-calendar-heatmap .color-filled {
   fill: $highlightColor;
 }
+.react-calendar-heatmap rect:hover {
+  stroke: #888;
+  stroke-width: 0.2px;
+}
 
 .months {
   display: flex;
@@ -41,6 +45,7 @@ a {
   }
 }
 
+// TODO remove
 .week {
   display: flex;
 

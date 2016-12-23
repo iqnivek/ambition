@@ -5,11 +5,9 @@
 
 import React from 'react';
 import _ from 'lodash';
-import axios from 'axios';
 import classNames from 'classnames';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
-import CompletionHistory from './CompletionHistory';
 import Month from './Month';
 import { createGoal, createGoalCompletion, fetchGoals } from './actions';
 
