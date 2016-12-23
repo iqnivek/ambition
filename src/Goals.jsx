@@ -60,18 +60,32 @@ class Goals extends React.Component {
   }
 
   getGoalCompletion(id) {
-    const latestCompletions = this.props.goalCompletions
-      .filter(({ time, goal_id }) => goal_id === id)
-      .sort(({ time }) => time)
-      .reverse();
-    return (latestCompletions.length > 0) && latestCompletions[0].complete;
+    const latest = this.getLatestGoalCompletions();
+    return latest[id] ? latest[id].complete : false;
+  }
+
+  getLatestGoalCompletions() {
+    const results = {};
+    this.props.goalCompletions.forEach((completion) => {
+      const prevCompletion = results[completion.goal_id];
+      if (prevCompletion) {
+        const prevTime = Date.parse(prevCompletion.time);
+        const currTime = Date.parse(completion.time);
+        if (currTime > prevTime) {
+          results[completion.goal_id] = completion;
+        }
+      } else {
+        results[completion.goal_id] = completion;
+      }
+    });
+    return results;
   }
 
   getCurrentCompletion() {
     if (this.props.goals.length === 0) {
       return 0;
     }
-    const numCompleted = 1;
+    const numCompleted = Object.values(this.getLatestGoalCompletions()).filter(({ complete }) => complete).length;
     const numTotal = this.props.goals.length;
     return Math.ceil(numCompleted / numTotal * 100);
   }
