@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
+import update from 'immutability-helper';
 
 const rootReducer = combineReducers({
   goals: (state = [], action) => {
     switch (action.type) {
       case 'RECEIVE_GOALS':
         return action.goals;
+      case 'CREATE_GOAL':
+        return state.concat(action.goal);
       default:
         return state;
     }
@@ -31,6 +34,12 @@ const rootReducer = combineReducers({
         return {
           name: '',
         };
+      case 'HIDE_NEW_GOAL':
+        return null;
+      case 'UPDATE_NEW_GOAL':
+        return action.goal;
+      case 'CREATE_GOAL':
+        return null;
       default:
         return state;
     }

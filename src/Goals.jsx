@@ -11,7 +11,7 @@ import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import CompletionHistory from './CompletionHistory';
 import Month from './Month';
-import { fetchGoals } from './actions';
+import { createGoal, fetchGoals } from './actions';
 
 class Goals extends React.Component {
   constructor(props) {
@@ -21,6 +21,7 @@ class Goals extends React.Component {
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
+    this.getGoalCompletion = this.getGoalCompletion.bind(this);
   }
 
   componentDidMount() {
@@ -34,30 +35,22 @@ class Goals extends React.Component {
   }
 
   onCancelNewGoal() {
-    this.setState({
-      newGoal: null,
+    this.props.dispatch({
+      type: 'HIDE_NEW_GOAL'
     });
   }
 
   onSubmitNewGoal() {
-    axios.post(
-      '/api/goals',
-      this.props.newGoal
-    ).then((response) => {
-      const newGoal = response.data;
-      this.setState(update(this.state, {
-        goals: { $push: [newGoal] },
-        newGoal: { $set: null },
-      }));
-    });
+    this.props.dispatch(createGoal(this.props.newGoal));
   }
 
   onChangeGoalName(event) {
-    this.setState(update(this.state, {
-      newGoal: {
+    this.props.dispatch({
+      type: 'UPDATE_NEW_GOAL',
+      goal: update(this.props.newGoal, {
         name: { $set: event.target.value }
-      }
-    }));
+      })
+    });
   }
 
   onCompleteGoal(goalID, complete) {
