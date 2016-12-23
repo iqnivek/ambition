@@ -1,10 +1,10 @@
-// TODO add circular progressbar for today's progress
 // TODO use router to show full completion history (vertical months)
 // TODO add ordering/dragdrop?
 // TODO use react-bootstrap? flexboxgrid?
 
 import React from 'react';
 import _ from 'lodash';
+import CircularProgressbar from 'react-circular-progressbar';
 import classNames from 'classnames';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
@@ -65,6 +65,15 @@ class Goals extends React.Component {
       .sort(({ time }) => time)
       .reverse();
     return (latestCompletions.length > 0) && latestCompletions[0].complete;
+  }
+
+  getCurrentCompletion() {
+    if (this.props.goals.length === 0) {
+      return 0;
+    }
+    const numCompleted = 1;
+    const numTotal = this.props.goals.length;
+    return Math.ceil(numCompleted / numTotal * 100);
   }
 
   // TODO make this a modal
@@ -144,9 +153,12 @@ class Goals extends React.Component {
                 <div className="col-xs-8 offset-xs-2">
                   <Month date={today} values={this.props.goalCompletionHistories} />
                 </div>
+                <div className="col-xs-4 offset-xs-4 mt-3">
+                  <CircularProgressbar percentage={this.getCurrentCompletion()} />
+                </div>
               </div>
 
-              <div className="mt-3">
+              <div className="mt-2">
                 {this.renderGoals()}
                 {this.props.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
