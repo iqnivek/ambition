@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import update from 'immutability-helper';
 
 const today = new Date();
 
@@ -12,22 +11,28 @@ const rootReducer = combineReducers({
         return state;
     }
   },
-  goals: (state = [], action) => {
+  goals: (state = {
+    isFetching: false,
+    didInvalidate: false,
+    goals: [],
+    completions: [],
+  }, action) => {
     switch (action.type) {
       case 'RECEIVE_GOALS':
-        return action.goals;
+        return Object.assign({}, state, {
+          isFetching: false,
+          didInvalidate: false,
+          goals: action.goals,
+          completions: action.completions,
+        });
       case 'CREATE_GOAL':
-        return state.concat(action.goal);
-      default:
-        return state;
-    }
-  },
-  goalCompletions: (state = [], action) => {
-    switch (action.type) {
-      case 'RECEIVE_GOAL_COMPLETIONS':
-        return action.goalCompletions;
+        return Object.assign({}, state, {
+          goals: state.goals.concat(action.goal),
+        });
       case 'CREATE_GOAL_COMPLETION':
-        return state.concat(action.goalCompletion);
+        return Object.assign({}, state, {
+          completions: state.completions.concat(action.completion),
+        });
       default:
         return state;
     }

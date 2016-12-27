@@ -8,14 +8,10 @@ export function fetchGoals() {
       axios.get('/api/goal_completion_histories'),
     ]).then(axios.spread((goalsResponse, goalCompletionsResponse, goalCompletionHistoriesResponse) => {
 
-      // TODO should these all be separate?
       dispatch({
         type: 'RECEIVE_GOALS',
         goals: goalsResponse.data,
-      });
-      dispatch({
-        type: 'RECEIVE_GOAL_COMPLETIONS',
-        goalCompletions: goalCompletionsResponse.data,
+        completions: goalCompletionsResponse.data,
       });
       dispatch({
         type: 'RECEIVE_GOAL_COMPLETION_HISTORIES',
@@ -49,7 +45,7 @@ export function createGoalCompletion(goalID, isComplete) {
     }).then((response) => {
       dispatch({
         type: 'CREATE_GOAL_COMPLETION',
-        goalCompletion: response.data,
+        completion: response.data,
       });
     });
   };

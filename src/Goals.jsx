@@ -68,11 +68,11 @@ class Goals extends React.Component {
   }
 
   getCurrentCompletion() {
-    if (this.props.goals.length === 0) {
+    if (this.props.goals.goals.length === 0) {
       return 0;
     }
-    const numCompleted = Object.values(getLatestGoalCompletions(this.props.goalCompletions)).filter(({ complete }) => complete).length;
-    const numTotal = this.props.goals.length;
+    const numCompleted = Object.values(getLatestGoalCompletions(this.props.goals.completions)).filter(({ complete }) => complete).length;
+    const numTotal = this.props.goals.goals.length;
     return Math.ceil(numCompleted / numTotal * 100);
   }
 
@@ -140,8 +140,8 @@ class Goals extends React.Component {
 
               <div className="mt-2">
                 <GoalList
-                  goals={this.props.goals}
-                  goalCompletions={this.props.goalCompletions}
+                  goals={this.props.goals.goals}
+                  goalCompletions={this.props.goals.completions}
                 />
                 {this.props.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
