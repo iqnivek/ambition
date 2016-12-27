@@ -2,12 +2,13 @@ import axios from 'axios';
 
 export function fetchGoals() {
   return (dispatch) => {
+    dispatch({ type: 'REQUEST_GOALS' });
+
     axios.all([
       axios.get('/api/goals'),
       axios.get('/api/goal_completions', { params: { date: (new Date()).toISOString() } }),
       axios.get('/api/goal_completion_histories'),
     ]).then(axios.spread((goalsResponse, goalCompletionsResponse, goalCompletionHistoriesResponse) => {
-
       dispatch({
         type: 'RECEIVE_GOALS',
         goals: goalsResponse.data,

@@ -140,8 +140,7 @@ class Goals extends React.Component {
 
               <div className="mt-2">
                 <GoalList
-                  goals={this.props.goals.goals}
-                  goalCompletions={this.props.goals.completions}
+                  goals={this.props.goals}
                 />
                 {this.props.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}

@@ -12,12 +12,17 @@ const rootReducer = combineReducers({
     }
   },
   goals: (state = {
-    isFetching: false,
+    isFetching: false,  // TODO make this a request counter instead of bool
     didInvalidate: false,
     goals: [],
     completions: [],
   }, action) => {
     switch (action.type) {
+      case 'REQUEST_GOALS':
+        return Object.assign({}, state, {
+          isFetching: true,
+          didInvalidate: false,
+        });
       case 'RECEIVE_GOALS':
         return Object.assign({}, state, {
           isFetching: false,

@@ -6,7 +6,7 @@ import { getLatestGoalCompletions } from './helpers';
 
 class GoalList extends React.Component {
   getGoalCompletion(id) {
-    const latest = getLatestGoalCompletions(this.props.goalCompletions);
+    const latest = getLatestGoalCompletions(this.props.goals.completions);
     return latest[id] ? latest[id].complete : false;
   }
 
@@ -15,10 +15,17 @@ class GoalList extends React.Component {
   }
 
   render() {
+    if (this.props.goals.goals.length === 0) {
+      // TODO
+    }
+    if (this.props.goals.isFetching) {
+      return <div className="sk-spinner sk-spinner-pulse" />;
+    }
+
     return (
       <ul className="goals list-unstyled">
         {
-          this.props.goals.map((goal) => {
+          this.props.goals.goals.map((goal) => {
             const complete = this.getGoalCompletion(goal.id);
 
             return (
