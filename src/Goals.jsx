@@ -1,3 +1,4 @@
+// TODO rename as dashboard?
 // TODO use router to show full completion history (vertical months)
 // TODO add ordering/dragdrop?
 // TODO use react-bootstrap? flexboxgrid?
@@ -5,11 +6,12 @@
 import React from 'react';
 import _ from 'lodash';
 import CircularProgressbar from 'react-circular-progressbar';
-import classNames from 'classnames';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
+import GoalList from './GoalList';
 import Month from './Month';
-import { createGoal, createGoalCompletion, fetchGoals } from './actions';
+import { createGoal, fetchGoals } from './actions';
+import { getLatestGoalCompletions } from './helpers';
 
 class Goals extends React.Component {
   constructor(props) {
@@ -19,7 +21,6 @@ class Goals extends React.Component {
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
-    this.getGoalCompletion = this.getGoalCompletion.bind(this);
   }
 
   componentDidMount() {
@@ -51,41 +52,15 @@ class Goals extends React.Component {
     });
   }
 
-  onCompleteGoal(goalID, isComplete) {
-    this.props.dispatch(createGoalCompletion(goalID, isComplete));
-  }
-
   onFormSubmit(event) {
     event.preventDefault();
-  }
-
-  getGoalCompletion(id) {
-    const latest = this.getLatestGoalCompletions();
-    return latest[id] ? latest[id].complete : false;
-  }
-
-  getLatestGoalCompletions() {
-    const results = {};
-    this.props.goalCompletions.forEach((completion) => {
-      const prevCompletion = results[completion.goal_id];
-      if (prevCompletion) {
-        const prevTime = Date.parse(prevCompletion.time);
-        const currTime = Date.parse(completion.time);
-        if (currTime > prevTime) {
-          results[completion.goal_id] = completion;
-        }
-      } else {
-        results[completion.goal_id] = completion;
-      }
-    });
-    return results;
   }
 
   getCurrentCompletion() {
     if (this.props.goals.length === 0) {
       return 0;
     }
-    const numCompleted = Object.values(this.getLatestGoalCompletions()).filter(({ complete }) => complete).length;
+    const numCompleted = Object.values(getLatestGoalCompletions(this.props.goalCompletions)).filter(({ complete }) => complete).length;
     const numTotal = this.props.goals.length;
     return Math.ceil(numCompleted / numTotal * 100);
   }
@@ -122,31 +97,6 @@ class Goals extends React.Component {
     );
   }
 
-  renderGoals() {
-    return (
-      <ul className="goals list-unstyled">
-        {
-          this.props.goals.map((goal) => {
-            const complete = this.getGoalCompletion(goal.id);
-
-            return (
-              <li
-                key={goal.id}
-                className={classNames('goal', { 'active': !complete })}
-                onClick={this.onCompleteGoal.bind(this, goal.id, !complete)}
-              >
-                <span className="goal-checkbox">
-                  <i className={classNames('fa', complete ? 'fa-check-circle' : 'fa-circle-thin')} />
-                </span>
-                {goal.name}
-              </li>
-            );
-          })
-        }
-      </ul>
-    );
-  }
-
   renderAddGoal() {
     return !this.props.newGoal ? (
       <div className="text-xs-center">
@@ -173,7 +123,10 @@ class Goals extends React.Component {
               </div>
 
               <div className="mt-2">
-                {this.renderGoals()}
+                <GoalList
+                  goals={this.props.goals}
+                  goalCompletions={this.props.goalCompletions}
+                />
                 {this.props.newGoal ? this.renderNewGoal() : null}
                 {this.renderAddGoal()}
               </div>
