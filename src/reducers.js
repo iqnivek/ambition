@@ -1,7 +1,17 @@
 import { combineReducers } from 'redux';
 import update from 'immutability-helper';
 
+const today = new Date();
+
 const rootReducer = combineReducers({
+  selectedDate: (state = today, action) => {
+    switch (action.type) {
+      case 'SELECT_DATE':
+        return action.date;
+      default:
+        return state;
+    }
+  },
   goals: (state = [], action) => {
     switch (action.type) {
       case 'RECEIVE_GOALS':

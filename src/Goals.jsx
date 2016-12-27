@@ -21,6 +21,7 @@ class Goals extends React.Component {
     this.onCancelNewGoal = this.onCancelNewGoal.bind(this);
     this.onSubmitNewGoal = this.onSubmitNewGoal.bind(this);
     this.onChangeGoalName = this.onChangeGoalName.bind(this);
+    this.onClickDate = this.onClickDate.bind(this);
   }
 
   componentDidMount() {
@@ -49,6 +50,16 @@ class Goals extends React.Component {
       goal: update(this.props.newGoal, {
         name: { $set: event.target.value }
       })
+    });
+  }
+
+  onClickDate(value) {
+    // TODO make ajax requests
+    console.log(value);
+
+    this.props.dispatch({
+      type: 'SELECT_DATE',
+      date: value.date,
     });
   }
 
@@ -115,7 +126,11 @@ class Goals extends React.Component {
               <h1 className="text-xs-center mb-3">ambition</h1>
               <div className="row">
                 <div className="col-xs-8 offset-xs-2">
-                  <Month date={today} values={this.props.goalCompletionHistories} />
+                  <Month
+                    date={today}
+                    values={this.props.goalCompletionHistories}
+                    onClick={this.onClickDate}
+                  />
                 </div>
                 <div className="col-xs-4 offset-xs-4 mt-3">
                   <CircularProgressbar percentage={this.getCurrentCompletion()} />
