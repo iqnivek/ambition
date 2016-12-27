@@ -30,6 +30,9 @@ a {
 .react-calendar-heatmap .color-filled {
   fill: $highlightColor;
 }
+.react-calendar-heatmap .color-selected {
+  fill: #fdfd96;
+}
 .react-calendar-heatmap rect:hover {
   stroke: #888;
   stroke-width: 0.2px;

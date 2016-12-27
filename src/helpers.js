@@ -16,10 +16,12 @@ export function getLatestGoalCompletions(goalCompletions) {
 }
 
 export function calendarClassForValue(value) {
+  if (value.selected) {
+    return 'color-selected';
+  }
   if (!value || !value.target_score) {
     return 'color-gitlab-0';
   }
-
   const completion = value.completed_score / value.target_score;
   if (completion <= 0) {
     return 'color-gitlab-0';

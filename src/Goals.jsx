@@ -117,7 +117,6 @@ class Goals extends React.Component {
   }
 
   render() {
-    const today = new Date();
     return (
       <div>
         <div className="container">
@@ -127,7 +126,7 @@ class Goals extends React.Component {
               <div className="row">
                 <div className="col-xs-8 offset-xs-2">
                   <Month
-                    date={today}
+                    date={this.props.selectedDate}
                     values={this.props.goalCompletionHistories}
                     classForValue={calendarClassForValue}
                     onClick={this.onClickDate}

@@ -40,14 +40,19 @@ class Month extends React.Component {
     const endDate = lastDayOfMonth(this.props.date);
     const numDays = numDaysInMonth(this.props.date);
 
-    // replace original values with normalized Date objects, and fill in missing dates
+    // replace original values with normalized Date objects
+    // fill in missing dates
+    // highlight selected date
     const normalizedValuesWithoutGaps = _.range(numDays).map((idx) => {
       const date = shiftDate(startDate, idx)
       const valueObj = _.find(this.props.values, (value) => {
         return isSameDate(new Date(value.date), date);
       }) || {};
 
-      return Object.assign({}, valueObj, { date: date });
+      return Object.assign({}, valueObj, {
+        date: date,
+        selected: isSameDate(date, this.props.date),
+      });
     });
 
     return (
