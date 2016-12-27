@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import GoalList from './GoalList';
 import Month from './Month';
 import { createGoal, fetchGoals } from './actions';
-import { getLatestGoalCompletions } from './helpers';
+import { calendarClassForValue, getLatestGoalCompletions } from './helpers';
 
 class Goals extends React.Component {
   constructor(props) {
@@ -129,10 +129,12 @@ class Goals extends React.Component {
                   <Month
                     date={today}
                     values={this.props.goalCompletionHistories}
+                    classForValue={calendarClassForValue}
                     onClick={this.onClickDate}
                   />
                 </div>
                 <div className="col-xs-4 offset-xs-4 mt-3">
+                  <p className="text-muted text-xs-center">{this.props.selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</p>
                   <CircularProgressbar percentage={this.getCurrentCompletion()} />
                 </div>
               </div>

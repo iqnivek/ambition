@@ -1,3 +1,7 @@
+//
+// Generic wrapper around CalendarHeatmap for month-based display
+//
+
 import React from 'react';
 import _ from 'lodash';
 import CalendarHeatmap from 'react-calendar-heatmap';
@@ -30,40 +34,21 @@ function isSameDate(d1, d2) {
   );
 }
 
-function calendarClassForValue(value) {
-  if (!value || !value.target_score) {
-    return 'color-gitlab-0';
-  }
-
-  const completion = value.completed_score / value.target_score;
-  if (completion <= 0) {
-    return 'color-gitlab-0';
-  } else if (completion < 0.25) {
-    return 'color-gitlab-1';
-  } else if (completion < 0.50) {
-    return 'color-gitlab-2';
-  } else if (completion < 0.75) {
-    return 'color-gitlab-3';
-  } else {
-    return 'color-gitlab-4';
-  }
-}
-
 class Month extends React.Component {
   render() {
+    const startDate = firstDayOfMonth(this.props.date);
     const endDate = lastDayOfMonth(this.props.date);
     const numDays = numDaysInMonth(this.props.date);
 
-    const startDate = firstDayOfMonth(this.props.date);
-    const missingMonthValues = _.range(numDays).map((idx) => {
-      return { date: shiftDate(startDate, idx) }
-    }).filter(({ date }) => {
-      return !_.find(this.props.values, (value) => {
-        const valDate = new Date(value.date);
-        return isSameDate(valDate, date);
-      });
+    // replace original values with normalized Date objects, and fill in missing dates
+    const normalizedValuesWithoutGaps = _.range(numDays).map((idx) => {
+      const date = shiftDate(startDate, idx)
+      const valueObj = _.find(this.props.values, (value) => {
+        return isSameDate(new Date(value.date), date);
+      }) || {};
+
+      return Object.assign({}, valueObj, { date: date });
     });
-    const valuesWithoutGaps = this.props.values.concat(missingMonthValues);
 
     return (
       <div>
@@ -73,8 +58,8 @@ class Month extends React.Component {
           numDays={numDays}
           horizontal={false}
           showMonthLabels={false}
-          values={valuesWithoutGaps}
-          classForValue={calendarClassForValue}
+          values={normalizedValuesWithoutGaps}
+          classForValue={this.props.classForValue}
           gutterSize={0.5}
           onClick={this.props.onClick}
         />
