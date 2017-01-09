@@ -1,6 +1,14 @@
+// @flow
+
 import axios from 'axios';
 
-export function fetchGoals() {
+type DispatchCallback = (dispatch: Function) => void;
+
+type Goal = {
+  name: string,
+};
+
+export function fetchGoals(): DispatchCallback {
   return (dispatch) => {
     dispatch({ type: 'REQUEST_GOALS' });
 
@@ -22,7 +30,7 @@ export function fetchGoals() {
   };
 }
 
-export function createGoal(goal) {
+export function createGoal(goal: Goal): DispatchCallback {
   return (dispatch) => {
     axios.post(
       '/api/goals',
@@ -37,7 +45,7 @@ export function createGoal(goal) {
   };
 }
 
-export function createGoalCompletion(goalID, isComplete) {
+export function createGoalCompletion(goalID: any, isComplete: boolean): DispatchCallback {
   return (dispatch) => {
     axios.post('/api/goal_completions', {
       time: (new Date()).toISOString(),

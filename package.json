@@ -5,6 +5,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack -p",
     "clean": "rimraf build",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
     "lint": "eslint src test",
     "prestart": "npm install",
     "start": "cd devel && webpack-dev-server --progress"
@@ -35,6 +36,7 @@
     "eslint-config-airbnb": "^2.0.0",
     "eslint-friendly-formatter": "^1.2.2",
     "eslint-plugin-react": "^3.11.3",
+    "flow-bin": "^0.37.4",
     "node-sass": "^3.4.2",
     "npm-shrinkwrap": "^200.0.0",
     "react-addons-test-utils": "^15.0.0",

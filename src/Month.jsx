@@ -1,3 +1,4 @@
+// @flow
 //
 // Generic wrapper around CalendarHeatmap for month-based display
 //
@@ -5,34 +6,7 @@
 import React from 'react';
 import _ from 'lodash';
 import CalendarHeatmap from 'react-calendar-heatmap';
-
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-function shiftDate(date, numDays) {
-  const newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + numDays);
-  return newDate;
-}
-
-function firstDayOfMonth(date) {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-function lastDayOfMonth(date) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
-}
-
-function numDaysInMonth(date) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-}
-
-function isSameDate(d1, d2) {
-  return (
-    d1.getDate() === d2.getDate() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getFullYear() === d2.getFullYear()
-  );
-}
+import { MONTHS, shiftDate, firstDayOfMonth, lastDayOfMonth, numDaysInMonth, isSameDate } from './dateHelpers';
 
 class Month extends React.Component {
   render() {
