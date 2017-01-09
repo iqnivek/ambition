@@ -1,4 +1,5 @@
-// TODO use Month component
+// TODO currently unused
+// TODO build this using Month component
 import React from 'react';
 import CalendarHeatmap from 'react-calendar-heatmap';
 
